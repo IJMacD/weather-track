@@ -2,7 +2,6 @@ import React from 'react'
 
 import styles from '../styles/App.css';
 
-
 export default class App extends React.Component {
   constructor () {
     super();
@@ -23,7 +22,7 @@ export default class App extends React.Component {
       <div>
         <div className={styles.jumbotron}>
           <h1>
-            Blank Project
+            Weather Track
           </h1>
           { isLoading ? 
             <p className={styles.loading2}>Loading</p> :
