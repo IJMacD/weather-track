@@ -1,0 +1,116 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
+    background: #eee;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+h1 {
+    margin: .67em 0;
+    font-size: 2em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;
+}
+
+h1, h2, h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 36px;
+}
+
+.jumbotron {
+  background: #532F8C;
+  color: white;
+  padding: 48px 0 80px;
+  margin-bottom: 30px;
+  text-align: center; }
+  .jumbotron h1 {
+    font-size: 63px;
+  }
+  .jumbotron p {
+    margin-bottom: 15px;
+    font-size: 21px;
+    font-weight: 200;
+    color: #d9ccee;
+    max-width: 75%;
+    margin: 1em auto 2em; }
+
+.container {
+    margin: 0 30px;
+}
+
+.loading {
+    width: 100%;
+    color: black;
+    margin-top: 10%;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.loading2 {
+    composes: loading;
+}
+
+.loading::before {
+    content: "";
+    border: 10px dotted rgb(32,128,32);
+    display: block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin: 10px auto;
+    animation: rotate 3s infinite linear;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg)
+    }
+} 
+
+.loading2::before {
+    content: "";
+    background: rgb(32,128,32);
+    display: block;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    margin: 10px auto;
+    animation: slide-over 2s infinite;
+}
+
+@keyframes slide-over {
+    from {
+        transform: translate(-20px);
+    }
+
+    50% {
+        transform: translate(20px);
+    }
+
+    to {
+        transform: translate(-20px);
+    }
+} 
