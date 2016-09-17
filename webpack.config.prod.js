@@ -29,8 +29,7 @@ module.exports = {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new OfflinePlugin()
+    new webpack.optimize.OccurrenceOrderPlugin()
   ],
 
   module: {
