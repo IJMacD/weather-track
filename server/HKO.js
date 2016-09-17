@@ -104,33 +104,34 @@ function parseTemperatureTable (tokens, lineIndex, data) {
     const tokes = line.split(/\s{2,}/);
 
     const name = tokes[0];
+    const airTemperature = parseFloat(tokes[1]);
+    const minAirTemperature = parseFloat(min_max[1]);
+    const maxAirTemperature = parseFloat(min_max[0]);
     const humid = parseInt(tokes[2]);
     const min_max = tokes[3].replace("*", "").split(/\s*\/\s*/);
 
     const station = {
-      name,
-      airTemperature: parseFloat(tokes[1]),
-      minAirTemperature: parseFloat(min_max[1]),
-      maxAirTemperature: parseFloat(min_max[0])
+      name
     };
 
-    if (humid) {
-      station.humidity = humid;
-    }
+    if (!isNaN(airTemperature))     station.airTemperature = airTemperature;
+    if (!isNaN(humid))              station.humidity = humid;
+    if (!isNaN(minAirTemperature))  station.minAirTemperature = minAirTemperature;
+    if (!isNaN(maxAirTemperature))  station.maxAirTemperature = maxAirTemperature;
 
     if (tokes[5]) {
       const grass = parseFloat(tokes[4]);
       const min_grass = parseFloat(tokes[5]);
-      if(grass) {
+      if(!isNaN(grass)) {
         station.grassTemperature = grass;
       }
-      if(min_grass) {
+      if(!isNaN(min_grass)) {
         station.minGrassTemperature = min_grass;
       }
     }
     else if (tokes[4]) {
       const min_grass = parseFloat(tokes[4]);
-      if(min_grass) {
+      if(!isNaN(min_grass)) {
         station.minGrassTemperature = min_grass;
       }
     }
@@ -164,8 +165,8 @@ function parseWindTable (tokens, lineIndex, data) {
 
     station.name = name;
     if(direction != "N/A") station.windDirection = direction;
-    if(speed) station.windSpeed = speed;
-    if(gust) station.windGust = gust;
+    if(!isNaN(speed)) station.windSpeed = speed;
+    if(!isNaN(gust)) station.windGust = gust;
   }
 
   return lineIndex;
@@ -189,7 +190,7 @@ function parsePressureTable (tokens, lineIndex, data) {
     stations[name] = station;
 
     station.name = name;
-    if(pressure) station.seaLevelPressure = pressure;
+    if(!isNaN(pressure)) station.seaLevelPressure = pressure;
   }
 
   return lineIndex;
@@ -213,7 +214,7 @@ function parseVisibilityTable (tokens, lineIndex, data) {
     stations[name] = station;
 
     station.name = name;
-    if(dist) station.visibility = dist;
+    if(!isNaN(dist)) station.visibility = dist;
   }
 
   return lineIndex;
@@ -239,9 +240,9 @@ function parseSolarTable (tokens, lineIndex, data) {
     stations[name] = station;
 
     station.name = name;
-    if(global) station.globalSolar = global;
-    if(direct) station.directSolar = direct;
-    if(diffuse) station.diffuseSolar = diffuse;
+    if(!isNaN(global)) station.globalSolar = global;
+    if(!isNaN(direct)) station.directSolar = direct;
+    if(!isNaN(diffuse)) station.diffuseSolar = diffuse;
   }
 
   return lineIndex;
