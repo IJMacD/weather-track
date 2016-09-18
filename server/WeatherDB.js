@@ -14,7 +14,12 @@ module.exports = {
         + "FROM weather_updates "
         + "ORDER BY station_name, time DESC";
         
-    return query(sql).then(result => result.rows.map(stationFromDBRow));
+    return query(sql).then(result => {
+      return {
+        stations: result.rows.map(stationFromDBRow),
+        time: Math.max.apply(null, result.rows.map(r => parseInt(r.time)))
+      }
+    });
   },
 
   getStation: function (stationID) {
