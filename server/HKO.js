@@ -81,11 +81,11 @@ function parseDateLine (tokens, lineIndex, data) {
   const line = tokens[lineIndex];
 
   if(line) {
-    const timeMatch = line.match(/(\d\d):(\d\d)/);
+    const timeMatch = line.match(/\d\d:\d\d/);
     const dateMatch = line.match(/\d\d? [a-z]+ \d\d\d\d/i);
 
     if(timeMatch && dateMatch) {
-      data.date = moment(dateMatch[0] + " " + timeMatch[0] + " +08:00", "YYYY-MMMM-D HH:mm Z");
+      data.date = moment(dateMatch[0] + " " + timeMatch[0] + " +08:00", "D MMMM YYYY HH:mm Z");
     }
   }
 
