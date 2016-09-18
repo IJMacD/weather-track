@@ -3,7 +3,7 @@ const Weather = require('./server/Weather');
 Weather.getUpdate().then(function(data) {
   if(data) {
     const stations = values(data.stations);
-    console.log("Loaded " + stations.length + " stations");
+    console.log("Loaded " + stations.length + " stations at " + data.date.toString());
   }
   else {
     console.log("Error loading weather");

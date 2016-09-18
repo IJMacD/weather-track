@@ -105,10 +105,10 @@ function parseTemperatureTable (tokens, lineIndex, data) {
 
     const name = tokes[0];
     const airTemperature = parseFloat(tokes[1]);
-    const minAirTemperature = parseFloat(min_max[1]);
-    const maxAirTemperature = parseFloat(min_max[0]);
     const humid = parseInt(tokes[2]);
     const min_max = tokes[3].replace("*", "").split(/\s*\/\s*/);
+    const minAirTemperature = parseFloat(min_max[1]);
+    const maxAirTemperature = parseFloat(min_max[0]);
 
     const station = {
       name
