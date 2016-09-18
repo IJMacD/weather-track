@@ -1,0 +1,33 @@
+.list {
+  list-style: none;
+  padding-left: 0;
+  text-align: center;
+}
+
+.card {
+  color: white;
+  display: inline-block;
+  height: 120px;
+  width: 120px;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 5px;
+  vertical-align: bottom;
+  text-align: initial;
+  background: #666;
+  box-shadow: 2px 2px 4px black;
+  background-position: 50% -20%;
+  background-size: 150%;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.card:hover {
+  box-shadow: 4px 4px 6px black;
+}
+
+.temp {
+  color: #999;
+  font-style: italic;
+  font-size: 12;
+}

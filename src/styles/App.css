@@ -56,6 +56,12 @@ h1 {
     margin: 0 30px;
 }
 
+@media (max-width: 480px) {
+    .container {
+        margin: 0 10px;
+    }
+}
+
 .loading {
     width: 100%;
     color: black;
