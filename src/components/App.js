@@ -59,7 +59,7 @@ export default class App extends React.Component {
           <div className={styles.container}>
             <h1>Weather Stations</h1>
             <p>Updated at { new Date(time).toString() }</p>
-            <Grid stations={stations} />
+            <Grid stations={stations} large={false} />
           </div>
         }
       </div>
