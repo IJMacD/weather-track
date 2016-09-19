@@ -30,9 +30,15 @@ export default class App extends React.Component {
           .map(s => {
             const url = `${s.image}?time=${now}`;
             s.image = url;
-            return url;
+            return preloadImage(url).then(img => {
+              if(img.height == 200) {
+                // Smaller image (355x200) means image unavailable message
+                s.image = null;
+              }
+            }, e => {
+              console.info("Image not found: " + url);
+            });
           })
-          .map(preloadImage)
         ).then(() => weather);
     }).then(weather => {
       const stations = weather.stations || [];
@@ -70,7 +76,7 @@ export default class App extends React.Component {
 function preloadImage(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.onload = () => resolve(url);
+    img.onload = () => resolve(img);
     img.onerror = (e) => reject(e);
     img.src = url;
   });
