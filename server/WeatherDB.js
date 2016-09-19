@@ -4,16 +4,16 @@ pg.defaults.ssl = true;
 module.exports = {
 
   getWeather: function () {
-    const sql = "SELECT DISTINCT ON (station_name)"
-          + "station_name, time, webcam_url, "
+    const sql = "SELECT DISTINCT ON (name)"
+          + "name, time, webcam_url, "
           + "air_temperature, relative_humidity, min_air_temperature, max_air_temperature, "
           + "grass_temperature, min_grass_temperature, "
           + "wind_direction, wind_speed, wind_gust, "
           + "sea_level_pressure, visibility, "
           + "global_solar, direct_solar, diffuse_solar "
         + "FROM weather_updates "
-        + "LEFT JOIN weather_stations ON station_name = name "
-        + "ORDER BY station_name, time DESC";
+        + "RIGHT OUTER JOIN weather_stations ON station_name = name "
+        + "ORDER BY name, time DESC";
         
     return query(sql).then(result => {
       return {
@@ -114,7 +114,7 @@ function query (sql, params) {
 
 function stationFromDBRow (row) {
   return Object.assign({
-    name:                 row.station_name,
+    name:                 row.name,
     image:                row.webcam_url
   }, updateFromDBRow(row));
 }
