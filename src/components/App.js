@@ -11,7 +11,8 @@ export default class App extends React.Component {
     
     this.state = {
       isLoading: true,
-      stations: []
+      stations: [],
+      size: "small"
     };
 
     this.loadData();
@@ -48,8 +49,12 @@ export default class App extends React.Component {
     });
   }
 
+  toggleSize () {
+    this.setState({size:this.state.size=="large"?"small":"large"});
+  }
+
   render () {
-    const { isLoading, stations, time } = this.state;
+    const { isLoading, stations, time, size } = this.state;
 
     stations.sort(sorter(s => -s.airTemperature, s => s.name));
 
@@ -64,8 +69,8 @@ export default class App extends React.Component {
           <p className={styles.loading2}>Loading</p> :
           <div className={styles.container}>
             <h1>Weather Stations</h1>
-            <p>Updated at { new Date(time).toString() }</p>
-            <Grid stations={stations} large={false} />
+            <p>Updated at { new Date(time).toString() } <button onClick={()=>this.toggleSize()}>{size=="large"?"Small":"Large"}</button></p>
+            <Grid stations={stations} large={size=="large"} />
           </div>
         }
       </div>
