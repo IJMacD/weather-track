@@ -5,7 +5,7 @@ module.exports = {
 
   getWeather: function () {
     const sql = "SELECT DISTINCT ON (name)"
-          + "name, time, webcam_url, "
+          + "name, time, abbreviation, webcam_url, "
           + "air_temperature, relative_humidity, min_air_temperature, max_air_temperature, "
           + "grass_temperature, min_grass_temperature, "
           + "wind_direction, wind_speed, wind_gust, "
@@ -18,7 +18,7 @@ module.exports = {
     return query(sql).then(result => {
       return {
         stations: result.rows.map(stationFromDBRow),
-        time: Math.max.apply(null, result.rows.map(r => parseInt(r.time)))
+        time: Math.max.apply(null, result.rows.map(r => parseInt(r.time) || 0))
       }
     });
   },
@@ -27,7 +27,7 @@ module.exports = {
     const moment = require('moment');
     const cutoff = moment().subtract(1, "day").valueOf();
     const sql = "SELECT "
-          + "time, webcam_url, "
+          + "time, webcam_url, abbreviation, "
           + "air_temperature, relative_humidity, min_air_temperature, max_air_temperature, "
           + "grass_temperature, min_grass_temperature, "
           + "wind_direction, wind_speed, wind_gust, "
@@ -115,6 +115,7 @@ function query (sql, params) {
 function stationFromDBRow (row) {
   return Object.assign({
     name:                 row.name,
+    code:                 row.abbreviation,
     image:                row.webcam_url
   }, updateFromDBRow(row));
 }
@@ -122,19 +123,19 @@ function stationFromDBRow (row) {
 function updateFromDBRow (row) {
   return {
     time:                 row.time,
-    airTemperature:       row.air_temperature,
+    airTemperature:       parseFloat(row.air_temperature),
     humidity:             row.relative_humidity,
-    minAirTemperature:    row.min_air_temperature,
-    maxAirTemperature:    row.max_air_temperature,
-    grassTemperature:     row.grass_temperature,
-    minGrassTemperature:  row.min_grass_temperature,
+    minAirTemperature:    parseFloat(row.min_air_temperature),
+    maxAirTemperature:    parseFloat(row.max_air_temperature),
+    grassTemperature:     parseFloat(row.grass_temperature),
+    minGrassTemperature:  parseFloat(row.min_grass_temperature),
     windDirection:        row.wind_direction,
     windSpeed:            row.wind_speed,
     windGust:             row.wind_gust,
-    seaLevelPressure:     row.sea_level_pressure,
+    seaLevelPressure:     parseFloat(row.sea_level_pressure),
     visibility:           row.visibility,
-    globalSolar:          row.globalSolar,
-    directSolar:          row.directSolar,
-    diffuseSolar:         row.diffuseSolar
+    globalSolar:          parseFloat(row.globalSolar),
+    directSolar:          parseFloat(row.directSolar),
+    diffuseSolar:         parseFloat(row.diffuseSolar)
   }
 }
