@@ -97,7 +97,7 @@ module.exports = {
 
 function query (sql, params) {
   return new Promise(function(resolve, reject){
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    pg.connect(process.env.NEW_DATABASE_URL, function(err, client, done) {
       if (err) { console.error(err); reject(err); }
       else {
         client.query(sql, params, function(err, result) {
