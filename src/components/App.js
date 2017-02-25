@@ -1,14 +1,15 @@
 import React from 'react'
 
 import Grid from './Grid';
-import { sorter } from '../util/array';
+import { sorter, sum } from '../util/array';
+import temperatureToColor from '../tempToColor';
 
 import styles from '../styles/App.css';
 
 export default class App extends React.Component {
   constructor () {
     super();
-    
+
     this.state = {
       isLoading: true,
       stations: [],
@@ -23,24 +24,8 @@ export default class App extends React.Component {
   loadData () {
     fetch('/weather').then(res => res.json()).then(weather => {
       const stations = weather.stations || [];
-      const now = Date.now();
 
-      return Promise.all(
-        stations
-          .filter(s=>s.image)
-          .map(s => {
-            const url = `${s.image}?time=${now}`;
-            s.image = url;
-            return preloadImage(url).then(img => {
-              if(img.height == 200) {
-                // Smaller image (355x200) means image unavailable message
-                s.image = null;
-              }
-            }, e => {
-              console.info("Image not found: " + url);
-            });
-          })
-        ).then(() => weather);
+      return preloadImages(stations).then(() => weather);
     }).then(weather => {
       const stations = weather.stations || [];
       const time = weather.time;
@@ -56,11 +41,18 @@ export default class App extends React.Component {
   render () {
     const { isLoading, stations, time, size } = this.state;
 
-    stations.sort(sorter(s => -s.airTemperature, s => s.name));
+    stations.sort(sorter(s => -s.airTemperature || null, s => s.name));
+
+    const withTemp = stations.filter(s => s.airTemperature);
+    const avgTemp = withTemp.map(s => s.airTemperature).reduce(sum, 0) / withTemp.length;
+
+    const jumboStyle = {
+      background: temperatureToColor(avgTemp)
+    };
 
     return (
       <div>
-        <div className={styles.jumbotron}>
+        <div className={styles.jumbotron} style={jumboStyle}>
           <h1>
             Weather Track
           </h1>
@@ -76,6 +68,26 @@ export default class App extends React.Component {
       </div>
     )
   }
+}
+
+function preloadImages (stations) {
+  const now = Date.now();
+  return Promise.all(
+    stations
+      .filter(s=>s.image)
+      .map(s => {
+        const url = `${s.image}?time=${now}`;
+        s.image = url;
+        return preloadImage(url).then(img => {
+          if(img.height == 200) {
+            // Smaller image (355x200) means image unavailable message
+            s.image = null;
+          }
+        }, e => {
+          console.info("Image not found: " + url);
+        });
+      })
+  );
 }
 
 function preloadImage(url) {

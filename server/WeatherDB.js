@@ -27,7 +27,7 @@ module.exports = {
     const moment = require('moment');
     const cutoff = moment().subtract(1, "day").valueOf();
     const sql = "SELECT "
-          + "station_name, time, "
+          + "name, time, "
           + "webcam_url, abbreviation, "
           + "air_temperature, relative_humidity, min_air_temperature, max_air_temperature, "
           + "grass_temperature, min_grass_temperature, "
@@ -49,7 +49,7 @@ module.exports = {
       }
 
       return {
-        name: result.rows[0].station_name,
+        name: result.rows[0].name,
         image: result.rows[0].webcam_url,
         abbreviation: result.rows[0].abbreviation,
         updates: result.rows.map(updateFromDBRow)
@@ -127,20 +127,28 @@ function stationFromDBRow (row) {
 
 function updateFromDBRow (row) {
   return {
-    time:                 parseInt(row.time),
-    airTemperature:       parseFloat(row.air_temperature),
-    humidity:             row.relative_humidity,
-    minAirTemperature:    parseFloat(row.min_air_temperature),
-    maxAirTemperature:    parseFloat(row.max_air_temperature),
-    grassTemperature:     parseFloat(row.grass_temperature),
-    minGrassTemperature:  parseFloat(row.min_grass_temperature),
-    windDirection:        row.wind_direction,
-    windSpeed:            row.wind_speed,
-    windGust:             row.wind_gust,
-    seaLevelPressure:     parseFloat(row.sea_level_pressure),
-    visibility:           row.visibility,
-    globalSolar:          parseFloat(row.globalSolar),
-    directSolar:          parseFloat(row.directSolar),
-    diffuseSolar:         parseFloat(row.diffuseSolar)
+    time:                 parseIntOrUndefined(row.time),
+    airTemperature:       parseFloatOrUndefined(row.air_temperature),
+    humidity:             parseFloatOrUndefined(row.relative_humidity),
+    minAirTemperature:    parseFloatOrUndefined(row.min_air_temperature),
+    maxAirTemperature:    parseFloatOrUndefined(row.max_air_temperature),
+    grassTemperature:     parseFloatOrUndefined(row.grass_temperature),
+    minGrassTemperature:  parseFloatOrUndefined(row.min_grass_temperature),
+    windDirection:        row.wind_direction || undefined,
+    windSpeed:            parseFloatOrUndefined(row.wind_speed),
+    windGust:             parseFloatOrUndefined(row.wind_gust),
+    seaLevelPressure:     parseFloatOrUndefined(row.sea_level_pressure),
+    visibility:           parseFloatOrUndefined(row.visibility),
+    globalSolar:          parseFloatOrUndefined(row.globalSolar),
+    directSolar:          parseFloatOrUndefined(row.directSolar),
+    diffuseSolar:         parseFloatOrUndefined(row.diffuseSolar)
   }
+}
+
+function parseIntOrUndefined(number) {
+  return number == null ? undefined : parseInt(number);
+}
+
+function parseFloatOrUndefined(number) {
+  return number == null ? undefined : parseFloat(number);
 }
