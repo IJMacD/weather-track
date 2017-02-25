@@ -49,9 +49,9 @@ module.exports = {
       }
 
       return {
+        id: result.rows[0].abbreviation,
         name: result.rows[0].name,
         image: result.rows[0].webcam_url,
-        abbreviation: result.rows[0].abbreviation,
         updates: result.rows.map(updateFromDBRow)
       };
     }, e => {
@@ -119,8 +119,8 @@ function query (sql, params) {
 
 function stationFromDBRow (row) {
   return Object.assign({
+    id:                   row.abbreviation,
     name:                 row.name,
-    code:                 row.abbreviation,
     image:                row.webcam_url
   }, updateFromDBRow(row));
 }

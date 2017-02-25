@@ -5,7 +5,7 @@ import temperatureToColor from '../tempToColor';
 import styles from '../styles/Grid.css';
 
 export default (props) => {
-  const { stations, large } = props;
+  const { stations, large, onStationClick } = props;
 
   return (
     <ul className={styles.list}>{
@@ -19,7 +19,12 @@ export default (props) => {
           fontSize: large && 24
         };
         return (
-          <li key={station.name} className={styles.card} style={style}>
+          <li
+            key={station.name}
+            className={styles.card}
+            style={style}
+            onClick={() => onStationClick(station.id)}
+          >
             <p className={styles.name}>{station.name}</p>
             <div className={styles.data}>
               { airTemperature &&

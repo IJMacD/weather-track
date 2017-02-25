@@ -1,6 +1,8 @@
 import React from 'react'
 
-import Grid from './Grid';
+import Summary from './Summary';
+import Detail from './Detail';
+
 import { sorter, sum } from '../util/array';
 import temperatureToColor from '../tempToColor';
 
@@ -13,7 +15,9 @@ export default class App extends React.Component {
     this.state = {
       isLoading: true,
       stations: [],
-      size: "small"
+      size: "small",
+      page: "",
+      station: null,
     };
 
     this.loadData();
@@ -38,32 +42,60 @@ export default class App extends React.Component {
     this.setState({size:this.state.size=="large"?"small":"large"});
   }
 
-  render () {
-    const { isLoading, stations, time, size } = this.state;
+  showSummary () {
+    this.setState({page: ""});
+  }
 
-    stations.sort(sorter(s => -s.airTemperature || null, s => s.name));
+  showDetail (id) {
+    const station = this.findStation(id);
+    this.setState({
+      page: "detail",
+      station,
+    });
+  }
+
+  findStation (id) {
+    return this.state.stations.filter(s => s.id == id)[0];
+  }
+
+  render () {
+    const { isLoading, stations, time, size, page, station } = this.state;
 
     const withTemp = stations.filter(s => s.airTemperature);
     const avgTemp = withTemp.map(s => s.airTemperature).reduce(sum, 0) / withTemp.length;
 
     const jumboStyle = {
-      background: temperatureToColor(avgTemp)
+      backgroundColor: temperatureToColor(avgTemp),
+      backgroundImage: page == "detail" && `url(${station.image})`,
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: '50%',
+      backgroundSize: 'cover',
+      height: page == "detail" && '100%',
+      marginBottom: page == "detail" && 0,
     };
 
     return (
       <div>
         <div className={styles.jumbotron} style={jumboStyle}>
           <h1>
-            Weather Track
+            {  page == "detail" ? station.name : "Weather Track" }
           </h1>
         </div>
         { isLoading ?
           <p className={styles.loading2}>Loading</p> :
-          <div className={styles.container}>
-            <h1>Weather Stations</h1>
-            <p>Updated at { new Date(time).toString() } <button onClick={()=>this.toggleSize()}>{size=="large"?"Small":"Large"}</button></p>
-            <Grid stations={stations} large={size=="large"} />
-          </div>
+          page == "detail" ?
+            <Detail
+              station={ station }
+              onBackClick={() => this.showSummary()}
+            />
+            :
+            <Summary
+              stations={stations}
+              time={time}
+              size={size}
+              onSizeToggle={() => this.toggleSize()}
+              onStationClick={station => this.showDetail(station)}
+            />
         }
       </div>
     )
