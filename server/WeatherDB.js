@@ -14,7 +14,7 @@ module.exports = {
         + "FROM weather_updates "
         + "RIGHT OUTER JOIN weather_stations ON station_name = name "
         + "ORDER BY name, time DESC";
-        
+
     return query(sql).then(result => {
       return {
         stations: result.rows.map(stationFromDBRow),
@@ -27,15 +27,16 @@ module.exports = {
     const moment = require('moment');
     const cutoff = moment().subtract(1, "day").valueOf();
     const sql = "SELECT "
-          + "time, webcam_url, abbreviation, "
+          + "station_name, time, "
+          + "webcam_url, abbreviation, "
           + "air_temperature, relative_humidity, min_air_temperature, max_air_temperature, "
           + "grass_temperature, min_grass_temperature, "
           + "wind_direction, wind_speed, wind_gust, "
           + "sea_level_pressure, visibility, "
           + "global_solar, direct_solar, diffuse_solar "
         + "FROM weather_updates "
-        + "LEFT JOIN weather_stations ON station_name = name"
-        + "WHERE station_name = $1 AND time > $2"
+        + "RIGHT OUTER JOIN weather_stations ON station_name = name "
+        + "WHERE abbreviation = $1 AND time > $2"
         + "ORDER BY time DESC";
     const params = [
       stationID,
@@ -48,10 +49,14 @@ module.exports = {
       }
 
       return {
-        name: stationID,
+        name: result.rows[0].station_name,
         image: result.rows[0].webcam_url,
+        abbreviation: result.rows[0].abbreviation,
         updates: result.rows.map(updateFromDBRow)
       };
+    }, e => {
+      console.error(e);
+      console.debug("Error on query: " + sql);
     });
   },
 
@@ -122,7 +127,7 @@ function stationFromDBRow (row) {
 
 function updateFromDBRow (row) {
   return {
-    time:                 row.time,
+    time:                 parseInt(row.time),
     airTemperature:       parseFloat(row.air_temperature),
     humidity:             row.relative_humidity,
     minAirTemperature:    parseFloat(row.min_air_temperature),
