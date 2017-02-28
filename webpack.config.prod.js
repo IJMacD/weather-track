@@ -39,7 +39,7 @@ module.exports = {
         exclude: /node_modules/ },
       { test: /\.css?$/,
         loader: 'style!css?modules&camelCase',
-        include: path.join(__dirname, 'src', 'styles') },
+        exclude: /node_modules/ },
       { test: /\.png$/,
         loader: 'file' },
       { test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
