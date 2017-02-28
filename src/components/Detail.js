@@ -31,11 +31,32 @@ export default (props) => {
     borderRadius: 10,
   };
 
+  const toolbarStyle = {
+    height: 64,
+    backgroundColor: temperatureToColor(airTemperature),
+    boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+    color: 'white',
+    display: 'flex',
+  };
+
+  const backStyle = {
+    background: 0,
+    border: 0,
+    color: 'white',
+  };
+
+  const titleStyle = {
+    fontSize: '1.5rem',
+    marginLeft: 10,
+  }
+
   return (
     <div style={jumboStyle}>
-      <button onClick={onBackClick} style={{position: 'absolute', top: 20, left: 10}}>Back</button>
+      <div style={toolbarStyle}>
+        <button onClick={onBackClick} style={backStyle}><i className="material-icons">arrow_back</i></button>
+        <h1 style={titleStyle}>{ station.name }</h1>
+      </div>
       <div style={detailStyle}>
-        <h1>{ station.name }</h1>
         { airTemperature &&
           <p>Air Temperature: {parseFloat(airTemperature).toFixed(1)}°C</p>
         }
