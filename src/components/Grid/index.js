@@ -1,8 +1,8 @@
 import React from 'react'
 
-import temperatureToColor from '../tempToColor';
+import temperatureToColor from '../../tempToColor';
 
-import styles from '../styles/Grid.css';
+import styles from './Grid.css';
 
 export default (props) => {
   const { stations, large, onStationClick } = props;

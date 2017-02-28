@@ -10,6 +10,16 @@ export default (props) => {
     visibility,
   } = station;
 
+  const jumboStyle = {
+    backgroundColor: temperatureToColor(airTemperature),
+    backgroundImage: `url(${station.image})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: '50%',
+    backgroundSize: 'cover',
+    height: '100%',
+    marginBottom: 0,
+  };
+
   const detailStyle = {
     position: 'absolute',
     bottom: 0,
@@ -22,7 +32,7 @@ export default (props) => {
   };
 
   return (
-    <div>
+    <div style={jumboStyle}>
       <button onClick={onBackClick} style={{position: 'absolute', top: 20, left: 10}}>Back</button>
       <div style={detailStyle}>
         <h1>{ station.name }</h1>
@@ -59,8 +69,8 @@ export default (props) => {
         { station.windSpeed &&
           <p>Wind Speed: {station.windSpeed} km/h</p>
         }
-        { station.windGustSpeed &&
-          <p>Wind Gust Speed: {station.windGustSpeed} km/h</p>
+        { station.windGust &&
+          <p>Wind Gust Speed: {station.windGust} km/h</p>
         }
       </div>
     </div>

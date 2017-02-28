@@ -1,12 +1,9 @@
 import React from 'react'
 
-import Summary from './Summary';
-import Detail from './Detail';
+import Summary from '../Summary';
+import Detail from '../Detail';
 
-import { sorter, sum } from '../util/array';
-import temperatureToColor from '../tempToColor';
-
-import styles from '../styles/App.css';
+import styles from './App.css';
 
 export default class App extends React.Component {
   constructor () {
@@ -33,8 +30,9 @@ export default class App extends React.Component {
     }).then(weather => {
       const stations = weather.stations || [];
       const time = weather.time;
+      const station = this.findStation(this.state.station && this.state.station.id);
 
-      this.setState({isLoading: false, stations, time})
+      this.setState({isLoading: false, stations, time, station})
     });
   }
 
@@ -61,26 +59,8 @@ export default class App extends React.Component {
   render () {
     const { isLoading, stations, time, size, page, station } = this.state;
 
-    const withTemp = stations.filter(s => s.airTemperature);
-    const avgTemp = withTemp.map(s => s.airTemperature).reduce(sum, 0) / withTemp.length;
-
-    const jumboStyle = {
-      backgroundColor: temperatureToColor(avgTemp),
-      backgroundImage: page == "detail" && `url(${station.image})`,
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: '50%',
-      backgroundSize: 'cover',
-      height: page == "detail" && '100%',
-      marginBottom: page == "detail" && 0,
-    };
-
     return (
       <div>
-        <div className={styles.jumbotron} style={jumboStyle}>
-          <h1>
-            {  page == "detail" ? station.name : "Weather Track" }
-          </h1>
-        </div>
         { isLoading ?
           <p className={styles.loading2}>Loading</p> :
           page == "detail" ?

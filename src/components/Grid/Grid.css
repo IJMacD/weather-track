@@ -24,6 +24,16 @@
   overflow: hidden;
 }
 
+@media (max-width: 480px) {
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .card {
+    width: 45%;
+    background-position: 50%;
+  }
+}
 .card p {
   margin: 0;
 }

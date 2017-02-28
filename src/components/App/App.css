@@ -94,7 +94,7 @@ h1 {
     to {
         transform: rotate(360deg)
     }
-} 
+}
 
 .loading2::before {
     content: "";
@@ -119,4 +119,4 @@ h1 {
     to {
         transform: translate(-20px);
     }
-} 
+}
