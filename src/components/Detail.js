@@ -11,7 +11,6 @@ export default (props) => {
   } = station;
 
   const jumboStyle = {
-    backgroundColor: temperatureToColor(airTemperature),
     backgroundImage: station.image && `url(${station.image})`,
     backgroundRepeat: 'no-repeat',
     backgroundPosition: '50%',
@@ -53,7 +52,7 @@ export default (props) => {
 
   const headerStyle = {
     display: station.image ? 'none' : '',
-    color: station.airTemperature ? 'white' : '#333',
+    color: '#333',
     fontSize: '5rem',
     padding: 30,
   };
