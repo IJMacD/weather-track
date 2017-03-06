@@ -12,9 +12,10 @@ export default class App extends React.Component {
     this.state = {
       isLoading: true,
       stations: [],
+      stationMap: {},
       size: "small",
       page: "",
-      station: null,
+      stationId: null,
     };
 
     this.loadData();
@@ -23,16 +24,20 @@ export default class App extends React.Component {
   }
 
   loadData () {
+    const oldMap = this.state.stationMap;
+
     fetch('/weather').then(res => res.json()).then(weather => {
-      const stations = weather.stations || [];
+      const stationMap = {};
+      const stations = (weather.stations || []).map(s => {
+        stationMap[s.id] = s;
+        return s.id;
+      });
 
       return preloadImages(stations).then(() => weather);
     }).then(weather => {
-      const stations = weather.stations || [];
       const time = weather.time;
-      const station = this.findStation(this.state.station && this.state.station.id);
 
-      this.setState({isLoading: false, stations, time, station})
+      this.setState({isLoading: false, stations, stationMap, time })
     });
   }
 
@@ -45,19 +50,16 @@ export default class App extends React.Component {
   }
 
   showDetail (id) {
-    const station = this.findStation(id);
     this.setState({
       page: "detail",
-      station,
+      stationId: id,
     });
   }
 
-  findStation (id) {
-    return this.state.stations.filter(s => s.id == id)[0];
-  }
-
   render () {
-    const { isLoading, stations, time, size, page, station } = this.state;
+    const { isLoading, stations, stationMap, time, size, page, stationId } = this.state;
+    const station = stationMap[stationId];
+    const stationsList = stations.map(id => stationMap[id]);
 
     return (
       <div>
@@ -70,7 +72,7 @@ export default class App extends React.Component {
             />
             :
             <Summary
-              stations={stations}
+              stations={stationsList}
               time={time}
               size={size}
               onSizeToggle={() => this.toggleSize()}
