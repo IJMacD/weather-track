@@ -37,7 +37,7 @@ module.exports = {
       { test: /\.js?$/,
         loader: 'babel',
         exclude: /node_modules/ },
-      { test: /\.css?$/,
+      { test: /\.css$/,
         loader: 'style!css?modules&camelCase',
         exclude: /node_modules/ },
       { test: /\.png$/,

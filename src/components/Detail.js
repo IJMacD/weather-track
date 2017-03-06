@@ -12,7 +12,7 @@ export default (props) => {
 
   const jumboStyle = {
     backgroundColor: temperatureToColor(airTemperature),
-    backgroundImage: `url(${station.image})`,
+    backgroundImage: station.image && `url(${station.image})`,
     backgroundRepeat: 'no-repeat',
     backgroundPosition: '50%',
     backgroundSize: 'cover',
@@ -33,7 +33,7 @@ export default (props) => {
 
   const toolbarStyle = {
     height: 64,
-    backgroundColor: temperatureToColor(airTemperature),
+    backgroundColor: airTemperature ? temperatureToColor(airTemperature) : "#666",
     boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
     color: 'white',
     display: 'flex',
@@ -43,18 +43,29 @@ export default (props) => {
     background: 0,
     border: 0,
     color: 'white',
+    padding: '0 20px',
   };
 
   const titleStyle = {
     fontSize: '1.5rem',
     marginLeft: 10,
-  }
+  };
+
+  const headerStyle = {
+    display: station.image ? 'none' : '',
+    color: station.airTemperature ? 'white' : '#333',
+    fontSize: '5rem',
+    padding: 30,
+  };
 
   return (
     <div style={jumboStyle}>
       <div style={toolbarStyle}>
         <button onClick={onBackClick} style={backStyle}><i className="material-icons">arrow_back</i></button>
         <h1 style={titleStyle}>{ station.name }</h1>
+      </div>
+      <div style={headerStyle}>
+        { station.name }
       </div>
       <div style={detailStyle}>
         { airTemperature &&
