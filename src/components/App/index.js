@@ -30,11 +30,16 @@ export default class App extends React.Component {
       const stationMap = {};
       const stations = (weather.stations || []).map(s => {
         stationMap[s.id] = s;
+
+        // Intercept images to reduce flicker
+        s.originalImage = s.image;
+        s.image = oldMap[s.id] ? oldMap[s.id].image : null;
+
         return s.id;
       });
 
-      return preloadImages(stations).then(() => weather);
-    }).then(weather => {
+      preloadImages(stations, stationMap).then(() => this.setState({stations}));
+
       const time = weather.time;
 
       this.setState({isLoading: false, stations, stationMap, time })
@@ -84,18 +89,19 @@ export default class App extends React.Component {
   }
 }
 
-function preloadImages (stations) {
+function preloadImages (stations, stationMap) {
   const now = Date.now();
+
   return Promise.all(
     stations
-      .filter(s=>s.image)
+      .map(id => stationMap[id])
+      .filter(s=>s && s.originalImage)
       .map(s => {
-        const url = `${s.image}?time=${now}`;
-        s.image = url;
+        const url = `${s.originalImage}?time=${now}`;
         return preloadImage(url).then(img => {
-          if(img.height == 200) {
+          if(img.height != 200) {
             // Smaller image (355x200) means image unavailable message
-            s.image = null;
+            s.image = url;
           }
         }, e => {
           console.info("Image not found: " + url);
